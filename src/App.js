@@ -1,24 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import RegistrationForm from './components/RegistrationForm';
+import LoginForm from './components/LoginForm';
+import EventList from './components/Event';
+import {login, register, getToken} from './auth/auth';
+
 
 function App() {
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const storedToken = getToken();
+    setIsLoggedIn(!!storedToken);
+  }, []);
+  
+const handleLogin = async (email, password) => {
+  try {
+    const response = await login(email, password);
+    const { token } = response;
+    localStorage.setItem('jwtToken', token);
+    setIsLoggedIn(true);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        {!isLoggedIn && (
+          <>
+            <Route path='/register' element={<RegistrationForm />}/>
+            <Route path='/login' element={<LoginForm />} />
+          </>
+        )}
+        {isLoggedIn && <Route path='/' element={<EventList />} />}
+      </Routes>
+    </Router>
   );
 }
 
