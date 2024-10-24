@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showSuccessAlert('Успешная авторизация! Добро пожаловать, ' + responseData.data.name);
 
                 // Перенаправление на другую страницу или действие
-                window.location.href = '/dashboard'; // Пример перенаправления
+                window.location.href = '/src/html/index.html'; // Пример перенаправления
             } else {
                 const errorData = await response.json();
                 // Показать сообщение об ошибке
